@@ -5,12 +5,14 @@ import com.solacesystems.jcsmp.EndpointProperties;
 import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPSession;
+import lombok.extern.java.Log;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
 @Component
+@Log
 public class ProvisionQueue implements Function<String, Queue> {
 	private final JCSMPSession jcsmpSession;
 
@@ -29,6 +31,7 @@ public class ProvisionQueue implements Function<String, Queue> {
 
 		Queue queue = new Queue();
 		queue.setName(jcsmpQueue.getName());
+		log.info(String.format("Message: %s", queue));
 		return queue;
 	}
 }

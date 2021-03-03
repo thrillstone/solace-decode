@@ -3,17 +3,17 @@ spring:
     function:
       scan:
         packages: com.example.solace.decode.function
-      definition: getMessageIdFromDestination|getMessage|logMessage;saveMessage|logMessage;provisionQueue|saveQueue|logQueue
+      definition: getMessageIdFromDestination|getMessage;saveMessage;provisionQueue|saveQueue
     stream:
       bindings:
-        saveMessage|logMessage-in-0:
+        saveMessage-in-0:
           destination: message
           group: store
           consumer:
             concurrency: 2
-        provisionQueue|saveQueue|logQueue-in-0:
+        provisionQueue|saveQueue-in-0:
           destination: provision/queue
-        getMessageIdFromDestination|getMessage|logMessage-in-0:
+        getMessageIdFromDestination|getMessage-in-0:
           destination: print/message/*
 
   # MongoDB Config
