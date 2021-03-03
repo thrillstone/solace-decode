@@ -24,7 +24,7 @@ spring:
       database: messaging_db
       username: admin
       password: admin
-      authentication-database: admin
+      authentication-database: admin #TODO Setup user credentials instead of using admin
 
   # MariaDB Config
   datasource:
