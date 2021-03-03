@@ -1,0 +1,57 @@
+spring:
+  cloud:
+    function:
+      scan:
+        packages: com.example.solace.decode.function
+      definition: getMessageIdFromDestination|getMessage|logMessage;saveMessage|logMessage;provisionQueue|saveQueue|logQueue
+    stream:
+      bindings:
+        saveMessage|logMessage-in-0:
+          destination: message
+          group: store
+          consumer:
+            concurrency: 2
+        provisionQueue|saveQueue|logQueue-in-0:
+          destination: provision/queue
+        getMessageIdFromDestination|getMessage|logMessage-in-0:
+          destination: print/message/*
+
+  # MongoDB Config
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: messaging_db
+      username: admin
+      password: admin
+      authentication-database: admin
+
+  # MariaDB Config
+  datasource:
+    url: jdbc:mariadb://localhost:3306/messaging_db
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: userA
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MariaDB53Dialect
+
+# Solace PubSub+ Config
+solace:
+  java:
+    host: localhost
+    msgVpn: default
+    clientUsername: default
+    clientPassword: default
+    connectRetries: 3
+    reconnectRetries: -1
+
+logging:
+  level:
+    # Workaround for https://github.com/spring-projects/spring-data-elasticsearch/issues/1675
+    # Return log-level for this class to INFO once spring-data-elasticsearch 4.2.X is released
+    org.springframework.data.convert.CustomConversions: ERROR
+
+server:
+  port: 8085
