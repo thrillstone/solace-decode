@@ -15,6 +15,10 @@ spring:
           destination: provision/queue
         getMessageIdFromDestination|getMessage-in-0:
           destination: print/message/*
+      solace:
+        default:
+          consumer:
+            queueMaxMsgRedelivery: 3
 
   # MongoDB Config
   data:
