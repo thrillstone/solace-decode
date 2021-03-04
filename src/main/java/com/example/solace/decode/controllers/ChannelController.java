@@ -3,10 +3,7 @@ package com.example.solace.decode.controllers;
 import com.example.solace.decode.Services.ChannelService;
 import com.example.solace.decode.model.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class ChannelController {
     }
 
     @PostMapping
-    public void createChannel(Channel channel) {
+    public void createChannel(@RequestBody  Channel channel) {
         channelService.createChannel(channel);
     }
 }
