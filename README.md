@@ -16,6 +16,12 @@ Then to run the server:
 ./mvnw spring-boot:run
 ```
 
+You can override `application.yml` properties at startup using environment variables, for example, to override `solace.java.host` & `solace.java.clientUsername`, you can do:
+
+```shell
+SOLACE_JAVA_HOST='<hostname>' SOLACE_JAVA_CLIENT_USERNAME='<username>' ./mvnw spring-boot:run
+```
+
 ## Actions
 
 ### Save a Message
