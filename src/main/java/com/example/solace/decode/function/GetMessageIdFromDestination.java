@@ -3,6 +3,7 @@ package com.example.solace.decode.function;
 import com.solace.spring.cloud.stream.binder.messaging.SolaceHeaders;
 import com.solacesystems.jcsmp.Destination;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessagingException;
 
 import java.util.function.Function;
 
@@ -14,7 +15,8 @@ public class GetMessageIdFromDestination implements Function<Message<?>, String>
 			String[] levels = destination.getName().split("/");
 			return levels[levels.length - 1];
 		} else {
-			return null;
+			// Shouldn't ever come here in reality
+			throw new MessagingException("no destination");
 		}
 	}
 }

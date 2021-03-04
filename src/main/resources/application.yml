@@ -7,7 +7,7 @@ spring:
     stream:
       bindings:
         saveMessage-in-0:
-          destination: message
+          destination: channels/*/messages
           group: store
           consumer:
             concurrency: 2

@@ -17,10 +17,13 @@ public class ESMessage {
 	@Id
 	private String id;
 
+	private String channelId;
+
 	private String payload;
 
 	public ESMessage(Message message) {
 		this.id = message.getId();
+		this.channelId = message.getChannelId();
 		this.payload = message.getPayload();
 	}
 }
