@@ -10,6 +10,14 @@ cd docker
 docker-compose up -d
 ```
 
+For dynamically allocated ports, you can run:
+
+```shell
+cd docker
+docker-compose -f docker-compose-dynamic.yml up -d
+
+```
+
 Then to run the server:
 
 ```shell
