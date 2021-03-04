@@ -20,6 +20,13 @@ spring:
           consumer:
             queueMaxMsgRedelivery: 3
 
+  # Elasticsearch Config
+  elasticsearch:
+    rest:
+      uris: localhost:9200
+      username: elastic
+      password: changeme
+
   # MongoDB Config
   data:
     mongodb:
