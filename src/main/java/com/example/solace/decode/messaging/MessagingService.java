@@ -2,9 +2,9 @@ package com.example.solace.decode.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solacesystems.jcsmp.*;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class MessagingService {
     private String url;
     private String vpnName;
@@ -16,12 +16,13 @@ public class MessagingService {
     private XMLMessageProducer prod;
     private ObjectMapper objectMapper;
 
+
     public MessagingService() throws Exception {
-        this.url = "wss://mr1rvhmgxn1b0t.messaging.solace.cloud:443";
-        this.vpnName = "decode";
+        this.url = "tcps://mr16jp1pl8afc3.messaging.solace.cloud:55443";
+        this.vpnName = "troubleflipper";
         this.userName = "solace-cloud-client";
         this.clientName = "server";
-        this.password = "tjn2jlk195ntk213e5idk29929";
+        this.password = "v5jio5c4chmfsf9mtflehlaj14";
         this.reconnectRetries = -1;
         final JCSMPProperties properties = new JCSMPProperties();
         properties.setProperty(JCSMPProperties.HOST, url);

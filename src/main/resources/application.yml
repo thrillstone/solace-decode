@@ -1,24 +1,24 @@
 spring:
-  cloud:
-    function:
-      scan:
-        packages: com.example.solace.decode.function
-      definition: getMessageIdFromDestination|getMessage;saveMessage;provisionQueue|saveQueue
-    stream:
-      bindings:
-        saveMessage-in-0:
-          destination: message
-          group: store
-          consumer:
-            concurrency: 2
-        provisionQueue|saveQueue-in-0:
-          destination: provision/queue
-        getMessageIdFromDestination|getMessage-in-0:
-          destination: print/message/*
-      solace:
-        default:
-          consumer:
-            queueMaxMsgRedelivery: 3
+#  cloud:
+#    function:
+#      scan:
+#        packages: com.example.solace.decode.function
+#      definition: getMessageIdFromDestination|getMessage;saveMessage;provisionQueue|saveQueue
+#    stream:
+#      bindings:
+#        saveMessage-in-0:
+#          destination: message
+#          group: store
+#          consumer:
+#            concurrency: 2
+#        provisionQueue|saveQueue-in-0:
+#          destination: provision/queue
+#        getMessageIdFromDestination|getMessage-in-0:
+#          destination: print/message/*
+#      solace:
+#        default:
+#          consumer:
+#            queueMaxMsgRedelivery: 3
 
   # Elasticsearch Config
   elasticsearch:
