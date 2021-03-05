@@ -11,8 +11,8 @@ spring:
           group: store
           consumer:
             concurrency: 2
-        provisionQueue|saveQueue-in-0:
-          destination: provision/queue
+#        provisionQueue|saveQueue-in-0:
+#          destination: provision/queue
         getMessageIdFromDestination|getMessage-in-0:
           destination: print/message/*
         updateMessageSearchAction-in-0:

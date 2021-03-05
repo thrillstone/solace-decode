@@ -1,6 +1,6 @@
 package com.example.solace.decode.config;
 
-import com.solacesystems.jcsmp.InvalidPropertiesException;
+import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPSession;
 import com.solacesystems.jcsmp.SpringJCSMPFactory;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,9 @@ public class JCSMPSessionConfig {
 	}
 
 	@Bean
-	public JCSMPSession jcsmpSession() throws InvalidPropertiesException {
-		return springJCSMPFactory.createSession();
+	public JCSMPSession jcsmpSession() throws JCSMPException {
+		JCSMPSession session = springJCSMPFactory.createSession();
+		session.connect();
+		return session;
 	}
 }

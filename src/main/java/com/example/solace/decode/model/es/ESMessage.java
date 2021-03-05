@@ -24,12 +24,12 @@ public class ESMessage {
 	private String payload;
 
 	@Field(type = FieldType.Rank_Feature)
-	private int search_clicks;
+	private double search_clicks;
 
 	public ESMessage(Message message) {
 		this.id = message.getId();
 		this.channelId = message.getChannelId();
 		this.payload = message.getPayload();
-		this.search_clicks = 0;
+		this.search_clicks = 0.00000000000000000001; // Set it to a tiny number because rank features must be > 1
 	}
 }
