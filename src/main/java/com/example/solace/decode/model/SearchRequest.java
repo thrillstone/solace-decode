@@ -11,5 +11,5 @@ import lombok.ToString;
 @ToString
 public class SearchRequest {
 	private String content;
-	private String userId;
+	private Integer userId;
 }

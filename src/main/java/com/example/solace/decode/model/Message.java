@@ -14,11 +14,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 public class Message {
 	@Id
-	private String id;
+	private Integer id;
 
 	private String payload;
 
-	private String channelId;
+	private Integer channelId;
 
 	private int search_clicks;
 }

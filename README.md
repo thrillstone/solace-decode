@@ -33,7 +33,7 @@ SOLACE_JAVA_HOST='<hostname>' SOLACE_JAVA_CLIENT_USERNAME='<username>' ./mvnw sp
 # Endpoints
 
 ## Search
-`POST /search/messages`: Payload example: `{"content": "<searchText>", "userId", "<requestorUserId>"}`
+`POST /search/messages`: Payload example: `{"content": "<searchText>", "userId", <requestorUserId>}`
 
 ## Actions
 

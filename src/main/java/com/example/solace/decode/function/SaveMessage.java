@@ -31,7 +31,7 @@ public class SaveMessage implements Consumer<Message<com.example.solace.decode.m
 		if (destination != null) {
 			Matcher match = channelIdMatcher.matcher(destination.getName());
 			if (match.find()) {
-				String channelId = match.group(1);
+				Integer channelId = Integer.valueOf(match.group(1));
 				com.example.solace.decode.model.Message payload = message.getPayload();
 				payload.setChannelId(channelId);
 				messageRepository.save(payload);
