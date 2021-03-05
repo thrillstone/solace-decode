@@ -11,11 +11,15 @@ import java.util.List;
 @Service
 public class ChannelService {
 
-    @Autowired
     private ChannelRepository channelRepository;
 
+    @Autowired
+    public ChannelService(ChannelRepository channelRepository) {
+        this.channelRepository = channelRepository;
+    }
+
     public List<Channel> getChannels() {
-        return List.of(new Channel());
+        return this.channelRepository.findAll();
     }
 
     @Transactional

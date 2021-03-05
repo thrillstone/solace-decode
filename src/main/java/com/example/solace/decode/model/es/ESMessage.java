@@ -20,7 +20,7 @@ public class ESMessage {
 	private String payload;
 
 	public ESMessage(Message message) {
-		this.id = message.getId();
-		this.payload = message.getPayload();
+//		this.id = message.getId();
+//		this.payload = message.getPayload();
 	}
 }
