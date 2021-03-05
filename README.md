@@ -30,6 +30,11 @@ You can override `application.yml` properties at startup using environment varia
 SOLACE_JAVA_HOST='<hostname>' SOLACE_JAVA_CLIENT_USERNAME='<username>' ./mvnw spring-boot:run
 ```
 
+# Endpoints
+
+## Search
+`POST /search/messages`: Payload example: `{"content": "<searchText>", "userId", "<requestorUserId>"}`
+
 ## Actions
 
 ### Save a Message
