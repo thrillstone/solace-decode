@@ -23,6 +23,7 @@ public class ESMessage {
 	@Field(type = FieldType.Keyword)
 	private Integer channelId;
 
+	@Field(type = FieldType.Text, analyzer = "english")
 	private String payload;
 
 	@Field(type = FieldType.Rank_Feature)
