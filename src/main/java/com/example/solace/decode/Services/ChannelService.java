@@ -25,11 +25,11 @@ public class ChannelService {
         return channelRepository.findAll();
     }
 
-    public long getMessageCount(String channelId) {
+    public long getMessageCount(Integer channelId) {
         return messageRepository.CountByMessage_ChannelId(channelId);
     }
 
-    public String getChatlog(String channelId) {
+    public String getChatlog(Integer channelId) {
         // generates new chatlog
         Pageable topHundred = PageRequest.of(0, 100);
         List<Message> chatlog = messageRepository.findByChannelId(channelId, topHundred);

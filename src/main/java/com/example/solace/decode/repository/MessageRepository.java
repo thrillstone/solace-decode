@@ -8,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MessageRepository extends MongoRepository<Message, String> {
-    long CountByMessage_ChannelId(String channelId);
+    long CountByMessage_ChannelId(Integer channelId);
 
     // idk which one is better
     // List<Message> findTop100ByChannelId(String channelId);
-    List<Message> findByChannelId(@Param("channelId") String channelId, Pageable pageable);
+    List<Message> findByChannelId(@Param("channelId") Integer channelId, Pageable pageable);
 }
