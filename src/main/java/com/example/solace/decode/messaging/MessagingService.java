@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solacesystems.jcsmp.*;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+
 @Service
 public class MessagingService {
     private String url;
@@ -53,9 +55,9 @@ public class MessagingService {
 
     public void publish(String topicName, Object content) throws Exception{
         final Topic topic = JCSMPFactory.onlyInstance().createTopic(topicName);
-        TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
+        BytesMessage msg = JCSMPFactory.onlyInstance().createMessage(BytesMessage.class);
         String text = objectMapper.writeValueAsString(content);
-        msg.setText(text);
+        msg.setData(text.getBytes(StandardCharsets.UTF_8));
         prod.send(msg,topic);
     }
 
