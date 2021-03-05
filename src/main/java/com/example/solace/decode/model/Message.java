@@ -17,4 +17,6 @@ public class Message {
 	private String id;
 
 	private String payload;
+
+	private String channelId;
 }

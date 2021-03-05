@@ -3,11 +3,11 @@ spring:
     function:
       scan:
         packages: com.example.solace.decode.function
-      definition: getMessageIdFromDestination|getMessage;saveMessage;provisionQueue|saveQueue
+      definition: getMessageIdFromDestination|getMessage;saveMessage;provisionQueue|saveQueue;updateMessageSearchAction
     stream:
       bindings:
         saveMessage-in-0:
-          destination: message
+          destination: channels/*/messages
           group: store
           consumer:
             concurrency: 2
@@ -15,6 +15,9 @@ spring:
           destination: provision/queue
         getMessageIdFromDestination|getMessage-in-0:
           destination: print/message/*
+        updateMessageSearchAction-in-0:
+          destination: messages/*/actions/*
+          group: store
       solace:
         default:
           consumer:

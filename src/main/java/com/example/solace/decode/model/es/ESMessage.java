@@ -19,6 +19,8 @@ public class ESMessage {
 	@Id
 	private String id;
 
+	private String channelId;
+
 	private String payload;
 
 	@Field(type = FieldType.Rank_Feature)
@@ -26,6 +28,7 @@ public class ESMessage {
 
 	public ESMessage(Message message) {
 		this.id = message.getId();
+		this.channelId = message.getChannelId();
 		this.payload = message.getPayload();
 		this.search_clicks = 0;
 	}

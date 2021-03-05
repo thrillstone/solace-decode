@@ -1,7 +1,7 @@
 package com.example.solace.decode.repository.es;
 
 import com.example.solace.decode.model.es.ESMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.elasticsearch.annotations.Query;
 
