@@ -53,7 +53,9 @@ public class UpdateMessageSearchAction implements Consumer<Message<?>> {
 
 		switch (action) {
 			case "click":
-				//TODO Update both saved and savedES to have the updated searchClick
+				int searchClicks = saved.getSearch_clicks() + 1;
+				saved.setSearch_clicks(searchClicks);
+				savedES.setSearch_clicks(searchClicks);
 				break;
 			default:
 				throw new MessagingException(action + " is not a valid action");

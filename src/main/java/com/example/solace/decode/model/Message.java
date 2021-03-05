@@ -19,4 +19,6 @@ public class Message {
 	private String payload;
 
 	private String channelId;
+
+	private int search_clicks;
 }
