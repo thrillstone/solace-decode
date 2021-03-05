@@ -22,13 +22,15 @@ public class ChannelController {
        this.messagingService = messagingService;
    }
 
+    @CrossOrigin
     @GetMapping
     public List<Channel> getChannels() {
        return channelService.getChannels();
     }
 
+    @CrossOrigin
     @PostMapping
-    public void createChannel(@RequestBody  Channel channel) throws Exception {
+    public void createChannel(@RequestBody Channel channel) throws Exception {
         channelService.createChannel(channel);
         messagingService.publish("channels", channel);
 

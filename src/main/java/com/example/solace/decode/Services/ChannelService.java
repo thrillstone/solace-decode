@@ -15,7 +15,7 @@ public class ChannelService {
     private ChannelRepository channelRepository;
 
     public List<Channel> getChannels() {
-        return List.of(new Channel());
+        return channelRepository.findAll();
     }
 
     @Transactional

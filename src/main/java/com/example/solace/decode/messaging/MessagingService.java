@@ -18,11 +18,11 @@ public class MessagingService {
 
 
     public MessagingService() throws Exception {
-        this.url = "tcps://mr16jp1pl8afc3.messaging.solace.cloud:55443";
-        this.vpnName = "troubleflipper";
+        this.url = "tcps://mr1rvhmgxn1b0t.messaging.solace.cloud:55443";
+        this.vpnName = "decode";
         this.userName = "solace-cloud-client";
         this.clientName = "server";
-        this.password = "v5jio5c4chmfsf9mtflehlaj14";
+        this.password = "tjn2jlk195ntk213e5idk29929";
         this.reconnectRetries = -1;
         final JCSMPProperties properties = new JCSMPProperties();
         properties.setProperty(JCSMPProperties.HOST, url);
