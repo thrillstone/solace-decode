@@ -18,7 +18,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class ESMessage {
 	@Id
 	@Field(type = FieldType.Keyword)
-	private Integer id;
+	private String id;
 
 	@Field(type = FieldType.Keyword)
 	private Integer channelId;
