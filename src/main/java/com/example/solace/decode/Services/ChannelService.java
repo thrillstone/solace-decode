@@ -3,6 +3,7 @@ package com.example.solace.decode.Services;
 import com.example.solace.decode.model.Channel;
 import com.example.solace.decode.model.Message;
 import com.example.solace.decode.repository.ChannelRepository;
+import com.example.solace.decode.repository.MessageJPARepository;
 import com.example.solace.decode.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -15,36 +16,22 @@ import java.util.List;
 @Service
 public class ChannelService {
 
-    @Autowired
     private ChannelRepository channelRepository;
 
     @Autowired
     private MessageRepository messageRepository;
 
+    public ChannelService(ChannelRepository channelRepository) {
+        this.channelRepository = channelRepository;
+    }
+
     public List<Channel> getChannels() {
-        return channelRepository.findAll();
+        return this.channelRepository.findAll();
     }
 
-    public long getMessageCount(Integer channelId) {
-        return messageRepository.CountByMessage_ChannelId(channelId);
+    public String getChannelSummary(Integer channelId) {
+        return this.channelRepository.findChannelById(channelId).getSummary();
     }
-
-    public String getChatlog(Integer channelId) {
-        // generates new chatlog
-        Pageable topHundred = PageRequest.of(0, 100);
-        List<Message> chatlog = messageRepository.findByChannelId(channelId, topHundred);
-        String log = "";
-        for (Message m: chatlog){
-            log += m.getPayload() + ". ";
-        }
-        return log;
-    }
-
-//    call this when new message is created
-//    if (channelService.getMessageCount(channelId) % 10 == 0){
-//        String log = channelService.getChatlog();
-//        messagingService.publish("channels/" + channelId + "/chatlog", log);
-//    }
 
     @Transactional
     public void createChannel(Channel channel) {

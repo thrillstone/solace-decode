@@ -1,23 +1,54 @@
 package com.example.solace.decode.messaging;
 
+import com.example.solace.decode.Services.ChannelService;
+import com.example.solace.decode.Services.MessageService;
+import com.example.solace.decode.model.Channel;
+import com.example.solace.decode.model.Message;
+import com.example.solace.decode.repository.ChannelRepository;
+import com.example.solace.decode.repository.MessageJPARepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solacesystems.jcsmp.JCSMPException;
-import com.solacesystems.jcsmp.JCSMPFactory;
-import com.solacesystems.jcsmp.JCSMPSession;
-import com.solacesystems.jcsmp.JCSMPStreamingPublishEventHandler;
-import com.solacesystems.jcsmp.TextMessage;
-import com.solacesystems.jcsmp.Topic;
-import com.solacesystems.jcsmp.XMLMessageProducer;
+import com.solacesystems.jcsmp.*;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class MessagingService {
+    private String url;
+    private String vpnName;
+    private String userName;
+    private String clientName;
+    private String password;
+    private Integer reconnectRetries;
+    private JCSMPSession session;
     private XMLMessageProducer prod;
     private ObjectMapper objectMapper;
+    private XMLMessageConsumer cons;
+    private MessageJPARepository messageJPARepository;
+    private MessageService messageService;
+    private ChannelRepository channelRepository;
 
+    public MessagingService(MessageJPARepository messageJPARepository, MessageService messageService, ChannelRepository channelRepository) throws Exception {
+        this.messageJPARepository = messageJPARepository;
+        this.channelRepository = channelRepository;
+        this.messageService = messageService;
+        this.url = "tcps://mr1rvhmgxn1b0t.messaging.solace.cloud:55443";
+        this.vpnName = "decode";
+        this.userName = "solace-cloud-client";
+        this.clientName = "server";
+        this.password = "tjn2jlk195ntk213e5idk29929";
+        this.reconnectRetries = -1;
+        final JCSMPProperties properties = new JCSMPProperties();
+        properties.setProperty(JCSMPProperties.HOST, url);
+        properties.setProperty(JCSMPProperties.USERNAME, userName);
+        properties.setProperty(JCSMPProperties.VPN_NAME, vpnName );
+        properties.setProperty(JCSMPProperties.CLIENT_NAME, clientName);
+        properties.setProperty(JCSMPProperties.PASSWORD, password );
 
-    public MessagingService(JCSMPSession session) throws Exception {
+        this.session = JCSMPFactory.onlyInstance().createSession(properties);
         this.objectMapper = new ObjectMapper();
+        session.connect();
         this.prod = session.getMessageProducer(new JCSMPStreamingPublishEventHandler() {
 
             @Override
@@ -31,15 +62,75 @@ public class MessagingService {
                         messageID,timestamp,e);
             }
         });
+        this.cons = session.getMessageConsumer(new XMLMessageListener() {
+
+            @Override
+            public void onReceive(BytesXMLMessage msg) {
+
+                String[] paths = msg.getDestination().getName().split("/");
+                int channelId = Integer.parseInt(paths[1]);
+                String topic = paths[2];
+
+                if (msg.getDestination().getName().equals("summary")) {
+                    byte[] body = msg.getAttachmentByteBuffer().array();
+                    String content = new String(body, StandardCharsets.UTF_8);
+                    Channel channelToUpdate = channelRepository.findChannelById(channelId);
+                    channelToUpdate.setSummary(content);
+                    channelRepository.save(channelToUpdate);
+                }
+
+                try {
+                    if (msg instanceof TextMessage) {
+                        System.out.printf("TextMessage received: '%s'%n",
+                                ((TextMessage) msg).getText());
+                    } else {
+                        byte[] body = msg.getAttachmentByteBuffer().array();
+                        String content = new String(body, StandardCharsets.UTF_8);
+                        JsonNode jsonNode = objectMapper.readTree(content);
+                        String type = jsonNode.get("type").asText();
+                        if (type.equals("message")) {
+                            Message message = objectMapper.readValue(content, Message.class);
+                            MessagingService.this.messageJPARepository.save(message);
+                            // add to chatlog every 10 messages
+                            if (messageService.getMessageCount(channelId) % 10 == 0){
+                                String log = messageService.getChatlog(channelId);
+                                publish("channels/" + channelId + "/chatlog", log);
+                            }
+                        }
+                        System.out.println("Message received.");
+                    }
+                    System.out.printf("Message Dump:%n%s%n", msg.dump());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onException(JCSMPException e) {
+                System.out.printf("Consumer received exception: %s%n",e);
+            }
+        });
+
+        cons.start();
+        this.subscribe("channels/*/messages");
+        this.subscribe("channels/*/summary");
 
     }
 
     public void publish(String topicName, Object content) throws Exception{
         final Topic topic = JCSMPFactory.onlyInstance().createTopic(topicName);
-        TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
+        BytesMessage msg = JCSMPFactory.onlyInstance().createMessage(BytesMessage.class);
         String text = objectMapper.writeValueAsString(content);
-        msg.setText(text);
+        msg.setData(text.getBytes(StandardCharsets.UTF_8));
         prod.send(msg,topic);
     }
+
+    public void subscribe (String topicName) throws Exception{
+        final Topic topic = JCSMPFactory.onlyInstance().createTopic(topicName);
+        session.addSubscription(topic);
+    }
+
+
+
 
 }
