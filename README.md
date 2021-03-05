@@ -38,13 +38,10 @@ SOLACE_JAVA_HOST='<hostname>' SOLACE_JAVA_CLIENT_USERNAME='<username>' ./mvnw sp
 ## Actions
 
 ### Save a Message
-Publish a message to topic `message` whose payload that has the structure of `{"id": "abc", "payload": "blah"}`. This will store the message in MongoDB and index it in Elasticsearch.
+Publish a message to topic `channels/<channelId>/messages` whose payload that has the structure of `{"id": "abc", "payload": "blah"}`. This will store the message in MongoDB and index it in Elasticsearch.
 
-### Get and Log a Message on the Server
-Publish a message with any payload (can't be `null`) to topic `print/message/{id}` where `{id}` is the message ID.
-
-### Provision a Queue & Save It
-Publish a message to topic `provision/queue` whose payload is the queue name. This will store the message in MariaDB.
+### Send an Message Click Event
+Publish a message to topic `messages/<messageId>/actions/click` with a `{}` payload to increment the click count for the given message ID.
 
 # Developer Resources
 
