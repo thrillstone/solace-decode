@@ -6,12 +6,11 @@ import javax.persistence.Id;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Entity
 public class Message {
 	@Id
-	private Integer messageId;
+	private String id;
 
 //	@ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //	@JoinColumn(name = "channelId",  referencedColumnName = "id", nullable = false, updatable = false)
@@ -34,4 +33,5 @@ public class Message {
 
 	@Column(nullable=false)
 	private String timestamp;
+
 }

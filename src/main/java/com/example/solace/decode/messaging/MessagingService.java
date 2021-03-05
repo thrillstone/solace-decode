@@ -1,5 +1,8 @@
 package com.example.solace.decode.messaging;
 
+import com.example.solace.decode.model.Message;
+import com.example.solace.decode.repository.MessageJPARepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solacesystems.jcsmp.*;
 import org.springframework.stereotype.Service;
@@ -17,9 +20,11 @@ public class MessagingService {
     private JCSMPSession session;
     private XMLMessageProducer prod;
     private ObjectMapper objectMapper;
+    private XMLMessageConsumer cons;
+    private MessageJPARepository messageJPARepository;
 
-
-    public MessagingService() throws Exception {
+    public MessagingService(MessageJPARepository messageJPARepository) throws Exception {
+        this.messageJPARepository = messageJPARepository;
         this.url = "tcps://mr1rvhmgxn1b0t.messaging.solace.cloud:55443";
         this.vpnName = "decode";
         this.userName = "solace-cloud-client";
@@ -50,6 +55,38 @@ public class MessagingService {
                         messageID,timestamp,e);
             }
         });
+        this.cons = session.getMessageConsumer(new XMLMessageListener() {
+
+            @Override
+            public void onReceive(BytesXMLMessage msg) {
+                try {
+                    if (msg instanceof TextMessage) {
+                        System.out.printf("TextMessage received: '%s'%n",
+                                ((TextMessage) msg).getText());
+                    } else {
+                        byte[] body = msg.getAttachmentByteBuffer().array();
+                        String content = new String(body, StandardCharsets.UTF_8);
+                        JsonNode jsonNode = objectMapper.readTree(content);
+                        String type = jsonNode.get("type").asText();
+                        if (type.equals("message")) {
+                            Message message = objectMapper.readValue(content, Message.class);
+                            MessagingService.this.messageJPARepository.save(message);
+                        }
+                        System.out.println("Message received.");
+                    }
+                    System.out.printf("Message Dump:%n%s%n", msg.dump());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onException(JCSMPException e) {
+                System.out.printf("Consumer received exception: %s%n",e);
+            }
+        });
+        cons.start();
+        this.subscribe("channels/*/messages");
 
     }
 
@@ -60,6 +97,12 @@ public class MessagingService {
         msg.setData(text.getBytes(StandardCharsets.UTF_8));
         prod.send(msg,topic);
     }
+
+    public void subscribe (String topicName) throws Exception{
+        final Topic topic = JCSMPFactory.onlyInstance().createTopic(topicName);
+        session.addSubscription(topic);
+    }
+
 
 
 
