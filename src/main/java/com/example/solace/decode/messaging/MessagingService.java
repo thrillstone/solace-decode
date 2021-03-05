@@ -15,7 +15,7 @@ public class MessagingService {
     private JCSMPSession session;
     private XMLMessageProducer prod;
     private ObjectMapper objectMapper;
-
+    private XMLMessageConsumer cons;
 
     public MessagingService() throws Exception {
         this.url = "tcps://mr16jp1pl8afc3.messaging.solace.cloud:55443";
@@ -48,6 +48,26 @@ public class MessagingService {
                         messageID,timestamp,e);
             }
         });
+        this.cons = session.getMessageConsumer(new XMLMessageListener() {
+
+            @Override
+            public void onReceive(BytesXMLMessage msg) {
+                if (msg instanceof TextMessage) {
+                    System.out.printf("TextMessage received: '%s'%n",
+                            ((TextMessage)msg).getText());
+                } else {
+                    System.out.println("Message received.");
+                }
+                System.out.printf("Message Dump:%n%s%n",msg.dump());
+            }
+
+            @Override
+            public void onException(JCSMPException e) {
+                System.out.printf("Consumer received exception: %s%n",e);
+            }
+        });
+
+
 
     }
 
@@ -58,6 +78,13 @@ public class MessagingService {
         msg.setText(text);
         prod.send(msg,topic);
     }
+
+    public void subscribe (String topicName) throws Exception{
+        final Topic topic = JCSMPFactory.onlyInstance().createTopic(topicName);
+        session.addSubscription(topic);
+        cons.start();
+    }
+
 
 
 
